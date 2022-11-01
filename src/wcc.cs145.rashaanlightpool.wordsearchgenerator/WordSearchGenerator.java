@@ -5,16 +5,19 @@ import java.util.*;
 
 public class WordSearchGenerator {
     
-    final static int GRID_ROWS = 10;
-    final static int GRID_COLS = 10;
-    final static int MAX_WORD_SIZE = 10;
-    final static Random rand = new Random();
+    private final static int GRID_ROWS = 10;
+    private final static int GRID_COLS = 10;
+    private final static int MAX_WORD_SIZE = 10;
+    private final static Random RAND = new Random();
+
+    private static boolean puzzleCreated = false;
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
 
-        char[][] puzzle = null; // empty puzzle array
-        char[][] solution = null; // empty solution array
+        char[][] puzzle = new char[GRID_COLS][GRID_ROWS];
+        char[][] solution = new char[GRID_COLS][GRID_ROWS];
+        // boolean puzzleCreated = false;
         String choice; // input variable
         boolean done = false; // boolean flag
 
@@ -24,13 +27,13 @@ public class WordSearchGenerator {
             choice = scan.nextLine().toUpperCase();
             switch (choice) {
                 case "G":
-                    generate(scan, puzzle);
+                    generate(scan, puzzle, solution);
                     break;
                 case "V":
                     print(puzzle);
                     break;
                 case "P":
-                    showSolution(solution);
+                    print(solution);
                     break;
                 case "Q":
                     done = true;
@@ -64,18 +67,25 @@ public class WordSearchGenerator {
                 "(Q)uit the program");
     }
 
-    public static void generate(Scanner scan, char[][] puzzle) {
+    public static void generate(Scanner scan, char[][] puzzle, char[][] solution) {
         List<String> words = new ArrayList<String>(getWords(scan));
         Collections.shuffle(words);
         for (String word : words) {
             tryToPlaceWord(word, puzzle);
         }
+        // copy words to the solution array
+        for (int i = 0; i < puzzle.length; i++) {
+            solution[i] = Arrays.copyOf(puzzle[i], puzzle[i].length);
+        }
+        fillWithLetters(puzzle);
+        fillWithPlaceholder(solution);
+        puzzleCreated = true;
         System.out.println("Puzzle generated successfully");
     }
 
     public static void tryToPlaceWord(String word, char[][] puzzle) {
-        int firstCell = rand.nextInt(100);
-        int firstDir = rand.nextInt(8);
+        int firstCell = RAND.nextInt(100);
+        int firstDir = RAND.nextInt(8) + 1;
         int tries = 0;
         int cell = firstCell;
         int dir = firstDir;
@@ -84,14 +94,16 @@ public class WordSearchGenerator {
                 if (checkGridBounds(word, cell, dir)) {
                     if (checkCells(puzzle, word, cell, dir)) { // check all the cells
                         placeWord (puzzle, word, cell, dir);
+                        return;
                     }
+                    tries++;
                 } else {
-                    dir = dir + 1 % 8;
+                    dir = ((dir + 1) % 8) + 1;
+                    tries++;
                 }
             }
-            tries++;
             cell = (cell + 1) % (GRID_ROWS * GRID_COLS);
-        } while (tries < 100); // 100 tries per word
+        } while (tries < 500); // 500 tries per word
     }
 
     public static boolean checkGridBounds(String word, int cell, int dir) {
@@ -126,6 +138,25 @@ public class WordSearchGenerator {
        }
     }
 
+    public static void fillWithLetters(char[][] puzzle) {
+        for (int i = 0; i < puzzle.length; i++) {
+            for (int j = 0; j < puzzle[i].length; j++) {
+                if (puzzle[i][j] == 0) {
+                    puzzle[i][j] = (char)(RAND.nextInt(26) + 65);
+                }
+            }
+        }
+    }
+
+    public static void fillWithPlaceholder(char[][] solution) {
+        for (int i = 0; i < solution.length; i++) {
+            for (int j = 0; j < solution[i].length; j++) {
+                if (solution[i][j] == 0) {
+                    solution[i][j] = (char)(126); // placeholder character
+                }
+            }
+        }
+    }
     public static GridDirections getGridDirection (int dir) {
         switch (dir) {
             case 1:
@@ -148,22 +179,20 @@ public class WordSearchGenerator {
                 throw new RuntimeException("not a valid direction");
         }
     }
-    public static void print(char[][] puzzle) {
-        if (puzzle == null) {
+    public static void print(char[][] arr) {
+        if (!puzzleCreated) {
             System.out.println("!You must generate a puzzle before viewing!");
             sleep(1);
         } else {
-            System.out.println(puzzle);
+            for (int i = 0; i < arr.length; i++) {
+                for (int j = 0; j < arr[i].length; j++) {
+                    System.out.print(arr[i][j] + " ");
+                }
+                System.out.println();
+            }
         }
     }
-    public static void showSolution(char[][] solution) {
-        if (solution == null) {
-            System.out.println("!Generate a puzzle first!");
-            sleep(1);
-        } else {
-            System.out.println(solution);
-        }
-    }
+
     public static List<String> getWords(Scanner scan) {
         System.out.println("How would you like to provide the words?\n(K)eyboard input or .txt (F)ile?");
         List<String> words = new ArrayList<String>();
