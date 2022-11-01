@@ -103,7 +103,7 @@ public class WordSearchGenerator {
                 }
             }
             cell = (cell + 1) % (GRID_ROWS * GRID_COLS);
-        } while (tries < 500); // 500 tries per word
+        } while (tries < 5000); // 500 tries per word
     }
 
     public static boolean checkGridBounds(String word, int cell, int dir) {
@@ -186,7 +186,7 @@ public class WordSearchGenerator {
         } else {
             for (int i = 0; i < arr.length; i++) {
                 for (int j = 0; j < arr[i].length; j++) {
-                    System.out.print(arr[i][j] + " ");
+                    System.out.print(arr[i][j] + "  ");
                 }
                 System.out.println();
             }

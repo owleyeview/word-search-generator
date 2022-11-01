@@ -1,0 +1,13 @@
+object
+array
+class
+public
+private
+protected
+variable
+void
+import
+package
+test
+string
+system
