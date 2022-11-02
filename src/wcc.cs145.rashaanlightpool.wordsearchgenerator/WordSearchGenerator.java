@@ -16,9 +16,6 @@ public class WordSearchGenerator {
 
         Puzzle grid = new Puzzle(GRID_ROWS, GRID_COLS);
 
-        // char[][] puzzle = new char[GRID_COLS][GRID_ROWS];
-        // char[][] solution = new char[GRID_COLS][GRID_ROWS];
-        // boolean puzzleCreated = false;
         String choice; // input variable
         boolean done = false; // boolean flag
 
@@ -225,6 +222,8 @@ public class WordSearchGenerator {
             sleep(1);
         } else {
             PrintStream out = new PrintStream(new File("saved-puzzle.txt"));
+            out.println(grid.getWords());
+            out.println();
             for (int i = 0; i < grid.getPuzzle().length; i++) {
                 for (int j = 0; j < grid.getPuzzle()[i].length; j++) {
                     out.print(grid.getPuzzle()[i][j] + "  ");
