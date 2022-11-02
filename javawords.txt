@@ -11,3 +11,6 @@ package
 test
 string
 system
+while
+collection
+interface
