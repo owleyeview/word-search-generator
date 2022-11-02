@@ -12,7 +12,7 @@ public class WordSearchGenerator {
 
     private static boolean puzzleCreated = false;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         Scanner scan = new Scanner(System.in);
 
         char[][] puzzle = new char[GRID_COLS][GRID_ROWS];
@@ -27,13 +27,17 @@ public class WordSearchGenerator {
             choice = scan.nextLine().toUpperCase();
             switch (choice) {
                 case "G":
-                    generate(scan, puzzle, solution);
+                    List<String> words = new ArrayList<String>(getWords(scan));
+                    generate(words, puzzle, solution);
                     break;
                 case "V":
                     print(puzzle);
                     break;
                 case "P":
                     print(solution);
+                    break;
+                case "S":
+                    savePuzzle(puzzle, solution);
                     break;
                 case "Q":
                     done = true;
@@ -64,11 +68,11 @@ public class WordSearchGenerator {
         System.out.println("Please select an option:");
         System.out.println("(G)enerate a new word search puzzle \n" +
                 "(V)iew your puzzle \n(P)eek at the solution \n" +
-                "(Q)uit the program");
+                "(S)ave this puzzle to a file \n(Q)uit the program");
     }
 
-    public static void generate(Scanner scan, char[][] puzzle, char[][] solution) {
-        List<String> words = new ArrayList<String>(getWords(scan));
+    public static void generate(List<String> words, char[][] puzzle, char[][] solution) {
+        // List<String> words = new ArrayList<String>(getWords(scan));
         Collections.shuffle(words);
         for (String word : words) {
             tryToPlaceWord(word, puzzle);
@@ -193,6 +197,29 @@ public class WordSearchGenerator {
         }
     }
 
+    public static void savePuzzle(char[][] puzzle, char[][] solution) throws FileNotFoundException { // List<String> words param?
+        if (!puzzleCreated) {
+            System.out.println("!You must generate a puzzle before saving!");
+            sleep(1);
+        } else {
+            PrintStream out = new PrintStream(new File("saved-puzzle.txt"));
+            for (int i = 0; i < puzzle.length; i++) {
+                for (int j = 0; j < puzzle[i].length; j++) {
+                    out.print(puzzle[i][j] + "  ");
+                }
+                out.println();
+            }
+            out.println();
+            out.println();
+            out.println();
+            for (int i = 0; i < solution.length; i++) {
+                for (int j = 0; j < solution[i].length; j++) {
+                    out.print(solution[i][j] + "  ");
+                }
+                out.println();
+            }
+        }
+    }
     public static List<String> getWords(Scanner scan) {
         System.out.println("How would you like to provide the words?\n(K)eyboard input or .txt (F)ile?");
         List<String> words = new ArrayList<String>();
