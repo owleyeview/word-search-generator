@@ -315,7 +315,12 @@ public class WordSearchGenerator {
                 } catch (FileNotFoundException e) {
                     System.out.println(e);
                 }
-            break;
+                break;
+            default:
+                System.out.println("Invalid input!");
+                System.out.println("No words added!");
+                sleep(1);
+                System.out.print("Empty ");
         }
         return words;
     }
