@@ -20,6 +20,7 @@ public class WordSearchGenerator {
     private final static int GRID_ROWS = 10;
     private final static int GRID_COLS = 10;
     private final static int MAX_WORD_SIZE = 10; // max letters per word
+    private final static int NUM_OF_WORDS = 15; // max words per puzzle
     private final static Random RAND = new Random();
 
 
@@ -132,7 +133,7 @@ public class WordSearchGenerator {
             }
             // try the next cell through the rows
             cell = (cell + 1) % (GRID_ROWS * GRID_COLS);
-        } while (tries < 5000); // 5000 tries per word
+        } while (tries < 6000); // 6000 tries per word
     }
 
     // Given a puzzle object, word String, cell, and direction
@@ -294,9 +295,9 @@ public class WordSearchGenerator {
         switch (input) {
             case "K":
                 System.out.println("Give me some words to play with!");
-                System.out.println("Please enter 10 words between 3 and " + MAX_WORD_SIZE + " characters long: ");
+                System.out.println("Please enter " + NUM_OF_WORDS + " words between 3 and " + MAX_WORD_SIZE + " characters long: ");
                 int wordCount = 0;
-                while (words.size() < 10) {
+                while (words.size() < NUM_OF_WORDS) {
                     String nextWord = scan.nextLine().toUpperCase();
                     if (nextWord.matches("^[A-Z]{3," + MAX_WORD_SIZE + "}$")) {
                         words.add(nextWord);
